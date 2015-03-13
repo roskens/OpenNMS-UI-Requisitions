@@ -67,7 +67,7 @@ function RequisitionInterface(intf) {
   self.services = [];
 
   angular.forEach(intf['monitored-service'], function(svc) {
-    self.services.push({ name: svc['service-name'] });
+    self.services.push({ name: svc['service-name'], selected: 'selected' });
   });
 
   /**

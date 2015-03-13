@@ -121,10 +121,51 @@
       $scope.intf.services.splice(index, 1);
     };
 
+    $scope.settings = {
+      bootstrap2: false,
+      filterClear: 'Show all!',
+      filterPlaceHolder: 'Filter!',
+      moveSelectedLabel: 'Move selected only',
+      moveAllLabel: 'Move all!',
+      removeSelectedLabel: 'Remove selected only',
+      removeAllLabel: 'Remove all!',
+      moveOnSelect: false,
+      preserveSelection: 'moved',
+      selectedListLabel: 'Managed Services',
+      nonSelectedListLabel: 'Available Services',
+      postfix: '_helperz',
+      selectMinHeight: 130,
+      filter: false,
+      filterNonSelected: '1',
+      filterSelected: '4',
+      infoAll: false,
+      infoFiltered: '<span class="label label-warning">Filtered</span> {0} from {1}!',
+      infoEmpty: 'Empty list',
+      filterValues: false
+    };
+
     // Initialization
 
     RequisitionsService.getAvailableServices().then(function(services) {
-      $scope.availableServices = services;
+      var existingServices = $scope.intf.services.map(function(svc) { return svc.name; });
+      console.log('$scope.intf.services', $scope.intf.services);
+
+      $scope.availableServices = services
+       .filter(function(svc){ return existingServices.indexOf(svc) < 0; })
+       .map(function(svc) { return {'name': svc }; })
+       .concat($scope.intf.services)
+       .sort(function(a, b) {
+          var x = a['name']; var y = b['name'];
+          if (typeof x == "string") {
+              x = x.toLowerCase();
+          }
+          if (typeof y == "string") {
+              y = y.toLowerCase();
+          }
+          return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+      })
+      ;
+      console.log('$scope.availableServices', $scope.availableServices);
     });
 
   }]);
